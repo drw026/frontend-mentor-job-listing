@@ -17,7 +17,7 @@
       </ul>
     </div>
     <div v-if="job.languages.length > 0" class="flex gap-4 md:justify-end flex-1 items-center md:flex-wrap border-t-[1px] border-gray-400 md:border-none mt-2 pt-4 md:mt-0 md:pt-0">
-      <button v-for="language in job.languages" @click="addFilter(language)" class="bg-turqoise-light text-turqoise rounded-sm text-sm px-2 py-1 font-bold">
+      <button v-for="language in job.languages" @click="addFilter(language)" class="bg-turqoise-light text-turqoise rounded-sm text-sm px-2 py-1 font-bold hover:bg-turqoise hover:text-white">
         {{language}}
       </button>
     </div>

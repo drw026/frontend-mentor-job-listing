@@ -9,7 +9,7 @@
 
 <script lang="ts">
   import { defineComponent } from 'vue';
-  import Job from './components/Job.vue';
+  import Job from './components/Job.vue'; 
   import Filters from './components/Filters.vue';
 
   export default defineComponent({
@@ -45,7 +45,7 @@
       },
       loadJobs() {
         this.isLoading = true;
-        fetch('https://fe-mentor-job-listing-937ef-default-rtdb.europe-west1.firebasedatabase.app/jobs.json')
+        fetch(`${import.meta.env.VITE_FIREBASE_URL}/jobs.json`)
           .then((response) => {
             if (!response.ok) throw new Error('Response not OK');
             return response.json();

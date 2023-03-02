@@ -1,3 +1,4 @@
+const plugin = require('tailwindcss/plugin')
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -5,7 +6,21 @@ module.exports = {
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'turqoise': '#5fa7a7',
+        'turqoise-light': '#eef7f6',
+        'turqoise-dark': '#293737'
+      }
+    },
   },
-  plugins: [],
+  plugins: [
+    plugin(
+      function({ addBase }) {
+        addBase({
+          'html': { fontSize: "14px" },
+        })
+      }
+    )
+  ],
 }

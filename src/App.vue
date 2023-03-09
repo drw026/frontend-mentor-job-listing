@@ -1,8 +1,10 @@
 <template>
-  <div class="mx-auto container p-6 flex gap-12 md:gap-10 flex-col">
-    <Filters />
-    <div class="flex gap-12 md:gap-6 flex-col" v-if="jobs.length > 0">
-      <Job v-for="job in filteredJobs" :job="job" />
+  <div class="bg-turqoise-light mt-[150px] pb-9">
+    <div class="mx-auto container p-6 flex gap-12 md:gap-10 flex-col h-auto">
+      <Filters />
+      <div class="flex gap-12 md:gap-6 flex-col" v-if="jobs.length > 0">
+        <Job v-for="job in filteredJobs" :job="job" />
+      </div>
     </div>
   </div>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <div class="shadow-lg bg-white rounded-md flex p-5 md:p-10 flex-col md:flex-row gap-2 md:gap-7">
+  <div class="shadow-lg bg-white rounded-md flex p-5 cursor-pointer flex-col md:flex-row gap-2 md:gap-7 hover:border-solid hover:border-l-4 hover:border-turqoise">
     <div class="relative">
       <img class="absolute w-[44px] h-[44px] top-[-44px] md:w-[88px] md:h-[88px] md:relative md:top-0" :src="job.logo" />
     </div>
@@ -29,7 +29,7 @@
 <script lang="ts">
   import {defineComponent} from 'vue';
   import Skills from './Skills.vue';
-  
+
   export default defineComponent({
     components: {
       Skills

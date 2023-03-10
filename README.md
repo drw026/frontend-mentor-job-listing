@@ -22,13 +22,13 @@ This is a solution to the [Job listings with filtering challenge on Frontend Men
 
 Users should be able to:
 
-- [ ] View the optimal layout for the site depending on their device's screen size
-- [ ] See hover states for all interactive elements on the page
-- [ ] Filter job listings based on the categories
+- [x] View the optimal layout for the site depending on their device's screen size
+- [x] See hover states for all interactive elements on the page
+- [x] Filter job listings based on the categories
 
 #### Additional challenge
 
-- [ ] Use VueJS
+- [x] Use VueJS
 - [ ] Persist and fetch data from external source (Firebase Realtime Database)
 - [ ] Add Admin route where jobs can be added and removed
 - [ ] Admin route is protected by authentication
@@ -68,5 +68,6 @@ WIP
 - Frontend Mentor - [@yourusername](https://www.frontendmentor.io/profile/yourusername)
 
 ## Acknowledgments
+Maximilian Schwarzmüller, for his excellent [VueJS course](https://www.udemy.com/course/vuejs-2-the-complete-guide) on Udemy.
 
 WIP

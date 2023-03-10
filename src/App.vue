@@ -31,16 +31,12 @@ export default defineComponent({
   },
   computed: {
     filteredJobs() {
-      const that = this;
-      if (this.selectedLanguageFilters.length === 0 && this.selectedLevelFilters.length === 0 && this.selectedRoleFilters.length === 0) return this.jobs;
-
-      return this.jobs.filter(function (job) {
-        return job.languages.some(function (language: string) {
-              return that.selectedLanguageFilters.includes(language)
-            }) ||
-            (that.selectedRoleFilters.includes(job.role) ||
-                that.selectedLevelFilters.includes(job.level))
-      });
+      return this.jobs.filter(job => {
+        const showRole = this.selectedRoleFilters.length === 0 || this.selectedRoleFilters.includes(job.role);
+        const showLevel = this.selectedLevelFilters.length === 0 || this.selectedLevelFilters.includes(job.level);
+        const showLanguages = this.selectedLanguageFilters.length === 0 || job.languages.some((language: string) => this.selectedLanguageFilters.includes(language));
+        return showRole && showLevel && showLanguages;
+      })
     }
   },
   methods: {

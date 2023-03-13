@@ -1,7 +1,7 @@
 <template>
   <div class="shadow-lg bg-white rounded-md flex p-5 cursor-pointer flex-col md:flex-row gap-2 md:gap-7 hover:border-solid hover:border-l-4 hover:border-turqoise">
     <div class="relative">
-      <img class="absolute w-[44px] h-[44px] top-[-44px] md:w-[88px] md:h-[88px] md:relative md:top-0" :src="job.logo" />
+      <img class="absolute w-[44px] h-[44px] top-[-44px] md:w-[88px] md:h-[88px] md:relative md:top-0" :alt="job.logo" :src="job.logo" />
     </div>
     <div class="flex flex-col gap-2">
       <div class="flex gap-2">
@@ -16,7 +16,7 @@
         <li class="pl-2">{{job.location}}</li>
       </ul>
     </div>
-    <div v-if="isSkills" class="flex gap-4 md:justify-end flex-1 items-center md:flex-wrap border-t-[1px] border-gray-400 md:border-none mt-2 pt-4 md:mt-0 md:pt-0">
+    <div v-if="isSkills" class="flex flex-wrap gap-4 md:justify-end flex-1 items-center md:flex-wrap border-t-[1px] border-gray-400 md:border-none mt-2 pt-4 md:mt-0 md:pt-0">
       <Skills v-if="job.role" @click="addRoleFilter(job.role)">{{job.role}}</Skills>
       <Skills v-if="job.level" @click="addLevelFilter(job.level)">{{job.level}}</Skills>
       <Skills v-for="language in job.languages" @click="addLanguageFilter(language)">

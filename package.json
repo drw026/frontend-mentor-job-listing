@@ -18,7 +18,8 @@
   },
   "dependencies": {
     "vite-tsconfig-paths": "^4.0.5",
-    "vue": "^3.2.47"
+    "vue": "^3.2.47",
+    "vue-router": "4"
   },
   "scripts": {
     "dev": "vite",

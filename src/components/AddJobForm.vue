@@ -1,44 +1,49 @@
 <template>
   <div class="container mx-auto max-w-[500px] rounded-md bg-white p-6">
-    <form @submit.prevent="">
+    <h1 class="mb-6 text-3xl font-bold text-turqoise-dark">Add a Job</h1>
+    <form @submit.prevent="submitJob" autocomplete="off">
       <label for="jobtitle">
-        <span class="font-bold">Job title</span>
+        <span class="text-lg font-bold">Job title</span>
         <input
           type="text"
           id="jobtitle"
-          v-model="jobtitle"
+          v-model.trim="jobtitle"
           class="mt-1 block w-full rounded-md border-gray-300 focus:border-turqoise focus:ring focus:ring-turqoise-light focus:ring-offset-0"
         />
       </label>
-      <label for="company" class="mt-2 block">
-        <span class="font-bold">Company</span>
+      <label for="company" class="mt-4 block">
+        <span class="text-lg font-bold">Company</span>
         <input
           type="text"
           id="company"
-          v-model="company"
+          v-model.trim="company"
           class="mt-1 block w-full rounded-md border-gray-300 focus:border-turqoise focus:ring focus:ring-turqoise-light focus:ring-offset-0"
         />
       </label>
-      <label for="contract" class="mt-2 block">
-        <span class="font-bold">Contract</span>
-        <input
-          type="text"
-          id="contract"
+      <label for="contract" class="mt-4 block">
+        <span class="text-lg font-bold">Contract</span>
+        <select
           v-model="contract"
+          id="contract"
           class="mt-1 block w-full rounded-md border-gray-300 focus:border-turqoise focus:ring focus:ring-turqoise-light focus:ring-offset-0"
-        />
+        >
+          <option disabled value="">Select a contract</option>
+          <option :value="contract.toLowerCase()" v-for="contract in contracts">
+            {{ contract }}
+          </option>
+        </select>
       </label>
-      <label for="location" class="mt-2 block">
-        <span class="font-bold">Location</span>
+      <label for="location" class="mt-4 block">
+        <span class="text-lg font-bold">Location</span>
         <input
           type="text"
           id="location"
-          v-model="location"
+          v-model.trim="location"
           class="mt-1 block w-full rounded-md border-gray-300 focus:border-turqoise focus:ring focus:ring-turqoise-light focus:ring-offset-0"
         />
       </label>
-      <label for="role" class="mt-2 block">
-        <span class="font-bold">Role</span>
+      <label for="role" class="mt-4 block">
+        <span class="text-lg font-bold">Role</span>
         <select
           id="role"
           v-model="role"
@@ -50,8 +55,8 @@
           </option>
         </select>
       </label>
-      <label for="level" class="mt-2 block">
-        Level
+      <label for="level" class="mt-4 block">
+        <span class="text-lg font-bold">Level</span>
         <select
           id="level"
           v-model="level"
@@ -62,6 +67,34 @@
             {{ level }}
           </option>
         </select>
+      </label>
+      <label for="language" class="mt-4 block">
+        <span class="text-lg font-bold">Skills</span>
+        <span class="text-xs"> (separate with a comma)</span>
+        <textarea
+          ref="skillsInput"
+          v-show="showSkillsEditor || skills.length === 0"
+          class="mt-1 block w-full rounded-md border-gray-300 focus:border-turqoise focus:ring focus:ring-turqoise-light focus:ring-offset-0"
+          @blur="(event) => convertSkills(event.target.value)"
+        ></textarea>
+        <div
+          v-show="!showSkillsEditor && skills.length > 0"
+          class="mt-1 w-full"
+        >
+          <ul class="flex gap-2">
+            <li v-for="skill in skills">
+              <Skills @click="editSkills">{{ skill }}</Skills>
+            </li>
+            <li>
+              <button
+                @click="editSkills"
+                class="rounded bg-turqoise px-2 py-1 text-sm font-bold text-white"
+              >
+                +
+              </button>
+            </li>
+          </ul>
+        </div>
       </label>
       <label for="new" class="mt-4 block">
         <input
@@ -82,7 +115,16 @@
         <span class="ml-2">"Featured" label</span>
       </label>
 
-      <div class="mt-6 flex justify-end">
+      <div class="mt-4 flex justify-end gap-2">
+        <router-link to="/admin" custom v-slot="{ navigate }">
+          <button
+            @click="navigate"
+            role="link"
+            class="rounded bg-turqoise-light px-3 py-2 font-bold text-turqoise hover:bg-turqoise hover:text-white"
+          >
+            Return to overview
+          </button>
+        </router-link>
         <button
           class="rounded bg-turqoise-light px-3 py-2 font-bold text-turqoise hover:bg-turqoise hover:text-white"
         >
@@ -95,19 +137,25 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import Skills from './Skills.vue';
 
 export default defineComponent({
   data() {
     return {
       jobtitle: '',
       company: '',
-      contract: '',
+      contract: [],
       location: '',
       role: '',
       level: '',
       new: false,
       featured: false,
+      skills: [],
+      showSkillsEditor: false,
     };
+  },
+  components: {
+    Skills,
   },
   computed: {
     roles() {
@@ -115,6 +163,35 @@ export default defineComponent({
     },
     levels() {
       return ['Senior', 'Junior', 'Midweight'];
+    },
+    contracts() {
+      return ['Full Time', 'Part Time', 'Contract'];
+    },
+  },
+  methods: {
+    convertSkills(input: string) {
+      const skills = input.split(',');
+      this.showSkillsEditor = false;
+      this.skills = skills
+        .map((skill) => skill.trim())
+        .filter((skill) => skill);
+    },
+    editSkills() {
+      this.showSkillsEditor = !this.showSkillsEditor;
+      this.$nextTick(() => this.$refs.skillsInput.focus());
+    },
+    submitJob() {
+      console.log({
+        jobtitle: this.jobtitle,
+        company: this.company,
+        location: this.location,
+        contract: this.contract,
+        role: this.role,
+        level: this.level,
+        skills: this.skills,
+        new: this.new,
+        featured: this.featured,
+      });
     },
   },
 });

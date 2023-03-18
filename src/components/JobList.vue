@@ -1,9 +1,10 @@
 <template>
   <page>
       <Filters/>
-      <div class="flex gap-12 md:gap-6 flex-col" v-if="jobs.length > 0">
-        <Job v-for="job in filteredJobs" :job="job"/>
+      <div class="flex gap-12 md:gap-6 flex-col" v-if="jobs.length > 0 && !isLoading">
+        <Job v-for="job in filteredJobs" :job="job" :key="job.id" />
       </div>
+      <span v-else-if="isLoading">Loading...</span>
   </page>
 </template>
 
@@ -12,6 +13,7 @@ import {defineComponent} from 'vue';
 import Job from './Job.vue';
 import Filters from './Filters.vue';
 import Page from '../common/Page.vue';
+import {timer, sleep} from '../common/helpers';
 
 export default defineComponent({
   data() {
@@ -64,24 +66,28 @@ export default defineComponent({
       if (!filter) return this.selectedLevelFilters.splice(0);
       this.selectedLevelFilters.splice(this.selectedLevelFilters.indexOf(filter), 1);
     },
-    loadJobs() {
+    async loadJobs() {
+      const fetchTime = timer();
+      fetchTime.start();
       this.isLoading = true;
-      fetch(`${import.meta.env.VITE_FIREBASE_URL}/jobs.json`)
-          .then((response) => {
-            if (!response.ok) throw new Error('Response not OK');
-            return response.json();
-          })
-          .then((data) => {
-            this.isLoading = false;
-            this.jobs = data;
-            console.log('data:', data);
-          })
-          .catch((error) => {
-            console.error(error)
-          });
+
+      try {
+        const response = await fetch(`${import.meta.env.VITE_FIREBASE_URL}/jobs.json`);
+        const data = await response.json();
+        const stopTime = fetchTime.stop();
+
+        if (!response.ok) throw new Error('Response not OK');
+        if (stopTime < 500) await sleep(500 - stopTime);
+
+        this.isLoading = false;
+        this.jobs = Object.values(data);
+      } catch(error){
+        console.error(error);
+        this.isLoading = false;
+      }
     }
   },
-  mounted() {
+  created() {
     this.loadJobs();
   },
   provide() {

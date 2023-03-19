@@ -1,6 +1,23 @@
 <template>
-  <div class="container mx-auto rounded-md bg-white p-6">
+  <div class="container mx-auto rounded-md bg-white p-6 shadow-lg">
     <div class="mb-6 flex justify-between border-b pb-6">
+      <base-dialog :show="!!jobId" title="Remove item">
+        Are you sure you want to delete this item ?
+        <template v-slot:actions>
+          <button
+            @click="cancelRemoval"
+            class="rounded bg-turqoise-light px-3 py-2 font-bold text-turqoise hover:bg-turqoise hover:text-white"
+          >
+            Cancel
+          </button>
+          <button
+            @click="removeJob(jobId)"
+            class="rounded bg-turqoise-light px-3 py-2 font-bold text-turqoise hover:bg-turqoise hover:text-white"
+          >
+            Confirm
+          </button>
+        </template>
+      </base-dialog>
       <h1 class="text-3xl font-bold text-turqoise-dark">Manage Jobs</h1>
       <router-link to="/admin/add-job" custom v-slot="{ navigate }">
         <button
@@ -13,21 +30,24 @@
       </router-link>
     </div>
     <ul v-if="jobs.length > 0 && !isLoading" class="flex flex-col gap-8">
-      <li v-for="job in jobs" class="flex justify-between">
+      <li
+        v-for="job in jobs"
+        class="flex flex-col justify-between gap-2 md:flex-row"
+      >
         <div class="flex flex-col">
           <h2 class="text-lg font-bold text-turqoise-dark">
             {{ job.position }}
           </h2>
           <ul class="flex list-outside list-disc gap-8 text-gray-600">
             <li class="list-none">{{ job.postedAt }}</li>
-            <li>{{ job.contract }}</li>
+            <li class="capitalize">{{ job.contract }}</li>
             <li>{{ job.location }}</li>
             <li>@{{ job.company }}</li>
           </ul>
         </div>
-        <div class="self-center">
+        <div class="md:self-center">
           <button
-            @click="removeJob(job.id)"
+            @click="confirmRemoval(job.id)"
             class="rounded bg-turqoise-light px-3 py-2 font-bold text-turqoise hover:bg-turqoise hover:text-white"
           >
             Remove
@@ -48,6 +68,7 @@ export default defineComponent({
     return {
       isLoading: false,
       jobs: [],
+      jobId: '',
     };
   },
   methods: {
@@ -67,11 +88,14 @@ export default defineComponent({
         if (stopTime < 500) await sleep(500 - stopTime);
 
         this.isLoading = false;
-        this.jobs = Object.keys(data).map(id => ({ ...data[id], id }));
+        this.jobs = Object.keys(data).map((id) => ({ ...data[id], id }));
       } catch (error) {
         console.error(error);
         this.isLoading = false;
       }
+    },
+    confirmRemoval(id: string) {
+      this.jobId = id;
     },
     async removeJob(id: string) {
       const response = await fetch(
@@ -79,6 +103,10 @@ export default defineComponent({
         { method: 'DELETE' },
       );
       this.jobs = this.jobs.filter((job) => job.id !== id);
+      this.jobId = '';
+    },
+    cancelRemoval() {
+      this.jobId = '';
     },
   },
   created() {

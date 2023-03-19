@@ -12,7 +12,6 @@
 import {defineComponent} from 'vue';
 import Job from './Job.vue';
 import Filters from './Filters.vue';
-import Page from '../common/Page.vue';
 import {timer, sleep} from '../common/helpers';
 
 export default defineComponent({
@@ -29,7 +28,6 @@ export default defineComponent({
   components: {
     Job,
     Filters,
-    Page
   },
   computed: {
     filteredJobs() {

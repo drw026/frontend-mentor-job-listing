@@ -5,7 +5,14 @@
       @click="tryClose"
       class="fixed inset-0 z-10 h-[100vh] w-full bg-turqoise-dark/75"
     ></div>
-    <transition name="dialog">
+    <transition name="dialog"
+      enter-from-class="opacity-0 scale-75"
+      leave-to-class="opacity-0 scale-75"
+      enter-active-class="transition all duration-300 ease-out"
+      leave-active-class="transition all duration-300 ease-in"
+      enter-to-class="opacity-1 scale-100"
+      leave-from-class="opacity-1 scale-100"
+    >
       <dialog
         open
         v-if="show"

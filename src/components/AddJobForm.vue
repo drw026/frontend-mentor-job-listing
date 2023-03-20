@@ -25,12 +25,12 @@
     <div v-else>
       <h1 class="mb-6 text-3xl font-bold text-turqoise-dark">Add a Job</h1>
       <form @submit.prevent="" autocomplete="off">
-        <label for="jobtitle">
-          <span class="text-lg font-bold">Job title</span>
+        <label for="position">
+          <span class="text-lg font-bold">Position</span>
           <input
             type="text"
-            id="jobtitle"
-            v-model.trim="jobtitle"
+            id="position"
+            v-model.trim="position"
             class="mt-1 block w-full rounded-md border-gray-300 focus:border-turqoise focus:ring focus:ring-turqoise-light focus:ring-offset-0"
           />
         </label>
@@ -94,30 +94,30 @@
             </option>
           </select>
         </label>
-        <label for="language" class="mt-4 block">
-          <span class="text-lg font-bold">Skills</span>
+        <label for="languages" class="mt-4 block">
+          <span class="text-lg font-bold">Languages</span>
           <span class="text-xs"> (separate with a comma)</span>
           <textarea
-            ref="skillsInput"
-            v-show="showSkillsEditor || skills.length === 0"
+            id="languages"
+            ref="languagesInput"
+            v-show="showLanguagesEditor || languages.length === 0"
             class="mt-1 block w-full rounded-md border-gray-300 focus:border-turqoise focus:ring focus:ring-turqoise-light focus:ring-offset-0"
-            @blur="(event) => convertSkills(event.target.value)"
+            @blur="(event) => convertLanguage(event.target.value)"
           ></textarea>
           <div
-            v-show="!showSkillsEditor && skills.length > 0"
+            v-show="!showLanguagesEditor && languages.length > 0"
             class="mt-1 w-full"
           >
             <ul class="flex gap-2">
-              <li v-for="skill in skills">
-                <Skills @click="editSkills">{{ skill }}</Skills>
+              <li v-for="language in languages">
+                <Language @click="editLanguage">{{ language }}</Language>
               </li>
               <li>
                 <button
-                  @click="editSkills"
+                  @click="editLanguage"
                   class="rounded bg-turqoise px-2 py-1 text-sm font-bold text-white"
                 >
-                  +
-                </button>
+                  + </button>
               </li>
             </ul>
           </div>
@@ -165,13 +165,13 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Skills from './Skills.vue';
+import Language from './Language.vue';
 
 export default defineComponent({
   data() {
     return {
       isSucces: false,
-      jobtitle: '',
+      position: '',
       company: '',
       contract: '',
       location: '',
@@ -179,12 +179,12 @@ export default defineComponent({
       level: '',
       new: false,
       featured: false,
-      skills: [],
-      showSkillsEditor: false,
+      languages: [],
+      showLanguagesEditor: false,
     };
   },
   components: {
-    Skills,
+    Language,
   },
   computed: {
     roles() {
@@ -200,7 +200,7 @@ export default defineComponent({
   methods: {
     addAnotherJob() {
       this.isSucces = false;
-      this.jobtitle = '';
+      this.position = '';
       this.company = '';
       this.contract = '';
       this.location = '';
@@ -208,18 +208,18 @@ export default defineComponent({
       this.level = '';
       this.new = false;
       this.featured = false;
-      this.skills = [];
+      this.languages = [];
     },
-    convertSkills(input: string) {
-      const skills = input.split(',');
-      this.showSkillsEditor = false;
-      this.skills = skills
-        .map((skill) => skill.trim())
-        .filter((skill) => skill);
+    convertLanguage(input: string) {
+      const languages = input.split(',');
+      this.showLanguagesEditor = false;
+      this.languages = languages
+        .map((language) => language.trim())
+        .filter((language) => language);
     },
-    editSkills() {
-      this.showSkillsEditor = !this.showSkillsEditor;
-      this.$nextTick(() => this.$refs.skillsInput.focus());
+    editLanguage() {
+      this.showLanguagesEditor = !this.showLanguagesEditor;
+      this.$nextTick(() => this.$refs.languagesInput.focus());
     },
     async submitJob() {
       try {
@@ -231,12 +231,12 @@ export default defineComponent({
               company: this.company,
               contract: this.contract,
               featured: this.featured,
-              languages: this.skills,
+              languages: this.languages,
               level: this.level,
               location: this.location,
               logo: '',
               new: this.new,
-              position: this.jobtitle,
+              position: this.position,
               postedAt: '1d ago',
               role: this.role,
             }),

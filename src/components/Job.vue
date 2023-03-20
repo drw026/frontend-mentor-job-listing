@@ -17,7 +17,7 @@
         <li class="pl-2">{{job.location}}</li>
       </ul>
     </div>
-    <div v-if="isSkills" class="flex flex-wrap gap-4 md:justify-end flex-1 items-center md:flex-wrap border-t-[1px] border-gray-400 md:border-none mt-2 pt-4 md:mt-0 md:pt-0">
+    <div v-if="isLanguages" class="flex flex-wrap gap-4 md:justify-end flex-1 items-center md:flex-wrap border-t-[1px] border-gray-400 md:border-none mt-2 pt-4 md:mt-0 md:pt-0">
       <Skills v-if="job.role" @click="addRoleFilter(job.role)">{{job.role}}</Skills>
       <Skills v-if="job.level" @click="addLevelFilter(job.level)">{{job.level}}</Skills>
       <Skills v-for="language in job.languages" @click="addLanguageFilter(language)" :key="job.language">
@@ -29,16 +29,16 @@
 
 <script lang="ts">
   import {defineComponent} from 'vue';
-  import Skills from './Skills.vue';
+  import Language from './Language.vue';
 
   export default defineComponent({
     components: {
-      Skills
+      Skills: Language
     },
     props: ['job'],
     inject: ['addLanguageFilter', 'addRoleFilter', 'addLevelFilter'],
     computed: {
-      isSkills() {
+      isLanguages() {
         return this.job.languages.length > 0 && this.job.role && this.job.level
       }
     }

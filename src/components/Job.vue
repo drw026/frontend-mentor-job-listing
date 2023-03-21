@@ -1,7 +1,7 @@
 <template>
   <div class="shadow-lg bg-white rounded-md flex p-5 cursor-pointer flex-col md:flex-row gap-2 md:gap-7 hover:border-solid hover:border-l-4 hover:border-turqoise">
     <div class="relative">
-      <img v-if="job.logo" class="absolute w-[44px] h-[44px] top-[-44px] md:w-[88px] md:h-[88px] md:relative md:top-0" :alt="job.logo" :src="job.logo" />
+      <img v-if="job.logo" class="absolute w-[44px] h-[44px] top-[-44px] md:w-[88px] md:h-[88px] md:relative md:top-0" :alt="job.logo" :src="logoSrc" />
       <div v-else class="w-[44px] h-[44px] md:h-[88px] md:w-[88px]"></div>
     </div>
     <div class="flex flex-col gap-2">
@@ -38,6 +38,9 @@
     props: ['job'],
     inject: ['addLanguageFilter', 'addRoleFilter', 'addLevelFilter'],
     computed: {
+      logoSrc() {
+        return `./images/${this.job.logo}`
+      },
       isLanguages() {
         return this.job.languages.length > 0 && this.job.role && this.job.level
       }

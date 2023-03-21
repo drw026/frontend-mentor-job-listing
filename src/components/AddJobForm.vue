@@ -1,14 +1,16 @@
 <template>
-  <div class="container mx-auto max-w-[500px] rounded-md bg-white p-6 shadow-lg">
+  <div
+    class="container mx-auto max-w-[500px] rounded-md bg-white p-6 shadow-lg"
+  >
     <div v-if="isSucces">
       <h1 class="mb-6 text-3xl font-bold text-turqoise-dark">Success!</h1>
       <p>Job was successfuly added.</p>
-      <div class="mt-6 flex gap-2">
+      <div class="mt-6 flex gap-3">
         <router-link to="/admin" custom v-slot="{ navigate }">
           <button
             @click="navigate"
             role="link"
-            class="rounded bg-turqoise-light px-3 py-2 font-bold text-turqoise hover:bg-turqoise hover:text-white"
+            class="rounded py-2 text-turqoise hover:underline"
           >
             Return to overview
           </button>
@@ -23,7 +25,18 @@
       </div>
     </div>
     <div v-else>
-      <h1 class="mb-6 text-3xl font-bold text-turqoise-dark">Add a Job</h1>
+      <div class="flex justify-between mb-6">
+        <h1 class="text-3xl font-bold text-turqoise-dark">Add a Job</h1>
+        <router-link to="/admin" custom v-slot="{ navigate }">
+          <button
+            @click="navigate"
+            role="link"
+            class="rounded py-2 text-turqoise hover:underline"
+          >
+            Return to overview
+          </button>
+        </router-link>
+      </div>
       <form @submit.prevent="" autocomplete="off">
         <label for="position">
           <span class="text-lg font-bold">Position</span>
@@ -117,7 +130,8 @@
                   @click="editLanguage"
                   class="rounded bg-turqoise px-2 py-1 text-sm font-bold text-white"
                 >
-                  + </button>
+                  +
+                </button>
               </li>
             </ul>
           </div>
@@ -141,16 +155,7 @@
           <span class="ml-2">"Featured" label</span>
         </label>
 
-        <div class="mt-4 flex justify-end gap-2">
-          <router-link to="/admin" custom v-slot="{ navigate }">
-            <button
-              @click="navigate"
-              role="link"
-              class="rounded bg-turqoise-light px-3 py-2 font-bold text-turqoise hover:bg-turqoise hover:text-white"
-            >
-              Return to overview
-            </button>
-          </router-link>
+        <div class="mt-4 flex justify-end gap-3">
           <button
             @click="submitJob"
             class="rounded bg-turqoise-light px-3 py-2 font-bold text-turqoise hover:bg-turqoise hover:text-white"

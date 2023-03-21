@@ -1,33 +1,41 @@
 <template>
   <div class="container mx-auto rounded-md bg-white p-6 shadow-lg">
-    <div class="mb-6 flex justify-between border-b pb-6">
-      <base-dialog :show="!!jobId" title="Remove item">
-        Are you sure you want to delete this item ?
-        <template v-slot:actions>
-          <button
-            @click="cancelRemoval"
-            class="rounded bg-turqoise-light px-3 py-2 font-bold text-turqoise hover:bg-turqoise hover:text-white"
-          >
-            Cancel
-          </button>
-          <button
-            @click="removeJob(jobId)"
-            class="rounded bg-turqoise-light px-3 py-2 font-bold text-turqoise hover:bg-turqoise hover:text-white"
-          >
-            Confirm
-          </button>
-        </template>
-      </base-dialog>
-      <h1 class="text-3xl font-bold text-turqoise-dark">Manage Jobs</h1>
-      <router-link to="/admin/add-job" custom v-slot="{ navigate }">
+    <base-dialog :show="!!jobId" title="Remove job">
+      Are you sure you want to delete this job ?
+      <template v-slot:actions>
         <button
-          @click="navigate"
-          role="link"
+          @click="cancelRemoval"
           class="rounded bg-turqoise-light px-3 py-2 font-bold text-turqoise hover:bg-turqoise hover:text-white"
         >
-          Add Job
+          Cancel
         </button>
-      </router-link>
+        <button
+          @click="removeJob(jobId)"
+          class="rounded bg-turqoise-light px-3 py-2 font-bold text-turqoise hover:bg-turqoise hover:text-white"
+        >
+          Confirm
+        </button>
+      </template>
+    </base-dialog>
+    <div class="mb-6 flex justify-between border-b pb-6">
+      <div class="flex justify-end gap-6">
+        <h1 class="text-3xl font-bold text-turqoise-dark">Manage Jobs</h1>
+        <router-link to="/admin/add-job" custom v-slot="{ navigate }">
+          <button
+            @click="navigate"
+            role="link"
+            class="rounded bg-turqoise-light px-3 py-2 font-bold text-turqoise hover:bg-turqoise hover:text-white"
+          >
+            Add Job
+          </button>
+        </router-link>
+      </div>
+      <button
+        class="rounded bg-turqoise-light px-3 py-2 font-bold text-turqoise hover:bg-turqoise hover:text-white"
+        @click="logout"
+      >
+        Logout
+      </button>
     </div>
     <Transition
       mode="out-in"
@@ -71,8 +79,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { timer, sleep } from '../common/helpers';
-import LoadingSpinner from './LoadingSpinner.vue'
+import { timer, sleep, deleteCookie } from '../common/helpers';
+import LoadingSpinner from './LoadingSpinner.vue';
 
 export default defineComponent({
   data() {
@@ -83,7 +91,7 @@ export default defineComponent({
     };
   },
   components: {
-    LoadingSpinner
+    LoadingSpinner,
   },
   methods: {
     async loadJobs() {
@@ -121,6 +129,10 @@ export default defineComponent({
     },
     cancelRemoval() {
       this.jobId = '';
+    },
+    logout() {
+      deleteCookie('accessToken');
+      this.$router.push('/login');
     },
   },
   created() {

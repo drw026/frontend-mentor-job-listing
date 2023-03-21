@@ -16,11 +16,11 @@
       <dialog
         open
         v-if="show"
-        class="fixed top-[20vh] left-[10%] z-[100] m-0 w-[80%] overflow-hidden rounded-md bg-white p-0 shadow-lg"
+        class="fixed top-[20vh] left-[50%] z-[100] m-0 max-w-[500px] translate-x-[-50%] overflow-hidden rounded-md bg-white p-0 shadow-lg"
       >
         <header class="bg-turqoise px-4 py-3 text-white">
           <slot name="header">
-            <h2 class="text-lg font-bold">{{ title }}</h2>
+            <h2 class="text-xl font-bold">{{ title }}</h2>
           </slot>
         </header>
         <section class="px-4 py-3">

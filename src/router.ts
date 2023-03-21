@@ -37,7 +37,6 @@ router.beforeEach(function (to, _, next) {
   } else {
     next();
   }
-  next();
 });
 
 export default router;

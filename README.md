@@ -29,9 +29,9 @@ Users should be able to:
 #### Additional challenge
 
 - [x] Use VueJS
-- [ ] Persist and fetch data from external source (Firebase Realtime Database)
-- [ ] Add Admin route where jobs can be added and removed
-- [ ] Admin route is protected by authentication
+- [x] Persist and fetch data from external source (Firebase Realtime Database)
+- [x] Add Admin route where jobs can be added and removed
+- [x] Admin route is protected by authentication
 
 ### Screenshot
 

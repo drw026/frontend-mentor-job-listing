@@ -16,7 +16,7 @@
       >
         <Job v-for="job in filteredJobs" :job="job" :key="job.id" />
       </div>
-      <LoadingSpinner v-else-if="isLoading" />
+      <LoadingSpinner v-else-if="isLoading" class="mt-8" />
     </Transition>
   </page>
 </template>
@@ -25,14 +25,13 @@
 import { defineComponent } from 'vue';
 import Job from './Job.vue';
 import Filters from './Filters.vue';
-import { timer, sleep } from '../common/helpers';
 import LoadingSpinner from './LoadingSpinner.vue';
+import getJobs from '../common/mixins/loadJobs';
 
 export default defineComponent({
+  mixins: [getJobs],
   data() {
     return {
-      jobs: [],
-      isLoading: false,
       error: false,
       selectedLanguageFilters: [],
       selectedRoleFilters: [],
@@ -95,28 +94,6 @@ export default defineComponent({
         this.selectedLevelFilters.indexOf(filter),
         1,
       );
-    },
-    async loadJobs() {
-      const fetchTime = timer();
-      fetchTime.start();
-      this.isLoading = true;
-
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_FIREBASE_URL}/jobs.json`,
-        );
-        const data = await response.json();
-        const stopTime = fetchTime.stop();
-
-        if (!response.ok) throw new Error('Response not OK');
-        if (stopTime < 500) await sleep(500 - stopTime);
-
-        this.isLoading = false;
-        this.jobs = Object.values(data);
-      } catch (error) {
-        console.error(error);
-        this.isLoading = false;
-      }
     },
   },
   created() {

@@ -17,7 +17,7 @@
         </button>
       </template>
     </base-dialog>
-    <div class="mb-6 flex justify-between border-b pb-6">
+    <div class="flex justify-between border-b pb-6">
       <div class="flex justify-end gap-6">
         <h1 class="text-3xl font-bold text-turqoise-dark">Manage Jobs</h1>
         <router-link to="/admin/add-job" custom v-slot="{ navigate }">
@@ -46,10 +46,10 @@
       enter-to-class="opacity-1 translate-y-0"
       leave-from-class="opacity-1 translate-y-0"
     >
-      <ul v-if="jobs.length > 0 && !isLoading" class="flex flex-col gap-8">
+      <ul v-if="jobs.length > 0 && !isLoading" class="flex flex-col">
         <li
           v-for="job in jobs"
-          class="flex flex-col justify-between gap-2 md:flex-row"
+          class="group mx-[-1.5rem] flex flex-col justify-between gap-2 px-6 py-5 hover:bg-turqoise-light md:flex-row"
         >
           <div class="flex flex-col">
             <h2 class="text-lg font-bold text-turqoise-dark">
@@ -65,28 +65,28 @@
           <div class="md:self-center">
             <button
               @click="confirmRemoval(job.id)"
-              class="rounded bg-turqoise-light px-3 py-2 font-bold text-turqoise hover:bg-turqoise hover:text-white"
+              class="rounded bg-turqoise-light px-3 py-2 font-bold text-turqoise hover:text-white group-hover:bg-turqoise group-hover:text-white"
             >
               Remove
             </button>
           </div>
         </li>
       </ul>
-      <LoadingSpinner v-else-if="isLoading" />
+      <LoadingSpinner v-else-if="isLoading" class="mt-6" />
     </Transition>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { timer, sleep, deleteCookie } from '../common/helpers';
+import { deleteCookie } from '../common/helpers';
+import getJobs from '../common/mixins/loadJobs';
 import LoadingSpinner from './LoadingSpinner.vue';
 
 export default defineComponent({
+  mixins: [getJobs],
   data() {
     return {
-      isLoading: false,
-      jobs: [],
       jobId: '',
     };
   },
@@ -94,28 +94,6 @@ export default defineComponent({
     LoadingSpinner,
   },
   methods: {
-    async loadJobs() {
-      const fetchTime = timer();
-      fetchTime.start();
-      this.isLoading = true;
-
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_FIREBASE_URL}/jobs.json`,
-        );
-        const data = await response.json();
-        const stopTime = fetchTime.stop();
-
-        if (!response.ok) throw new Error('Response not OK');
-        if (stopTime < 500) await sleep(500 - stopTime);
-
-        this.isLoading = false;
-        this.jobs = Object.keys(data).map((id) => ({ ...data[id], id }));
-      } catch (error) {
-        console.error(error);
-        this.isLoading = false;
-      }
-    },
     confirmRemoval(id: string) {
       this.jobId = id;
     },

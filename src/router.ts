@@ -1,13 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import JobList from './components/JobList.vue';
-import Admin from './components/Admin.vue';
+import JobList from './components/jobs/JobList.vue';
+import Admin from './pages/Admin.vue';
 import AddJobForm from './components/admin/AddJobForm.vue';
 import AdminJobList from './components/admin/JobList.vue';
 import Login from './components/Login.vue';
+import Jobs from './pages/Jobs.vue';
 import { readCookie } from './common/helpers';
 
 const routes = [
-  { path: '/', component: JobList },
+  { path: '/', component: Jobs, children: [{ path: '', component: JobList }] },
   {
     path: '/admin',
     component: Admin,

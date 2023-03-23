@@ -1,5 +1,4 @@
 <template>
-  <page>
     <Filters />
     <Transition
       mode="out-in"
@@ -18,15 +17,14 @@
       </div>
       <LoadingSpinner v-else-if="isLoading" class="mt-8" />
     </Transition>
-  </page>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Job from './Job.vue';
 import Filters from './Filters.vue';
-import LoadingSpinner from './LoadingSpinner.vue';
-import getJobs from '../common/mixins/loadJobs';
+import LoadingSpinner from '../LoadingSpinner.vue';
+import getJobs from '../../common/mixins/loadJobs';
 
 export default defineComponent({
   mixins: [getJobs],

@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto rounded-md bg-white p-6 shadow-lg">
+  <div class="container mx-auto rounded-md bg-white p-6 shadow-lg shadow-turqoise/30">
     <base-dialog :show="!!jobId" title="Remove job">
       Are you sure you want to delete this job ?
       <template v-slot:actions>

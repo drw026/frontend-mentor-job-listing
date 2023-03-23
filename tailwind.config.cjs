@@ -11,7 +11,10 @@ module.exports = {
         'turqoise': '#5fa7a7',
         'turqoise-light': '#eef7f6',
         'turqoise-dark': '#293737'
-      }
+      },
+      fontFamily: {
+        'spartan': ['"League Spartan"', 'sans-serif'],
+      },
     },
   },
   plugins: [

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="container mx-auto max-w-[500px] rounded-md bg-white p-6 shadow-lg"
+    class="container mx-auto max-w-[500px] rounded-md bg-white p-6 shadow-lg shadow-turqoise/30"
   >
     <Transition
       mode="out-in"
@@ -131,14 +131,14 @@
               v-show="!showLanguagesEditor && languages.length > 0"
               class="mt-1 w-full"
             >
-              <ul class="flex gap-2">
+              <ul class="flex gap-2 flex-wrap">
                 <li v-for="language in languages">
                   <Language @click="editLanguage">{{ language }}</Language>
                 </li>
                 <li>
                   <button
                     @click="editLanguage"
-                    class="rounded bg-turqoise px-2 py-1 text-sm font-bold text-white"
+                    class="rounded-md bg-turqoise px-3 py-1 font-bold capitalize text-white hover:bg-turqoise-light hover:text-turqoise"
                   >
                     +
                   </button>

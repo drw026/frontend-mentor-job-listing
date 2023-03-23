@@ -1,7 +1,7 @@
 <template>
   <page>
     <div
-      class="container mx-auto max-w-[500px] rounded-md bg-white p-6 shadow-lg"
+      class="container mx-auto max-w-[500px] rounded-md bg-white p-6 shadow-lg shadow-turqoise/30"
     >
       <h1 class="mb-6 text-3xl font-bold text-turqoise-dark">
         Login Admin portal

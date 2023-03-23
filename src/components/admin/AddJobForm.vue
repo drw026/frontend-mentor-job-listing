@@ -170,7 +170,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Language from './Language.vue';
+import Language from '../Language.vue';
 
 export default defineComponent({
   data() {

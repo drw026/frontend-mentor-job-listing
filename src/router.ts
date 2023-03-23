@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import JobList from './components/JobList.vue';
 import Admin from './components/Admin.vue';
-import AddJobForm from './components/AddJobForm.vue';
-import AdminJobList from './components/AdminJobList.vue';
+import AddJobForm from './components/admin/AddJobForm.vue';
+import AdminJobList from './components/admin/JobList.vue';
 import Login from './components/Login.vue';
 import { readCookie } from './common/helpers';
 

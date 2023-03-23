@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import AddJobForm from './AddJobForm.vue'; 
+import AddJobForm from './admin/AddJobForm.vue'; 
 
 export default defineComponent({
   components: { AddJobForm }

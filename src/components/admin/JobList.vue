@@ -46,32 +46,9 @@
       enter-to-class="opacity-1 translate-y-0"
       leave-from-class="opacity-1 translate-y-0"
     >
-      <ul v-if="jobs.length > 0 && !isLoading" class="flex flex-col">
-        <li
-          v-for="job in jobs"
-          class="group mx-[-1.5rem] flex flex-col justify-between gap-2 px-6 py-5 hover:bg-turqoise-light md:flex-row"
-        >
-          <div class="flex flex-col">
-            <h2 class="text-lg font-bold text-turqoise-dark">
-              {{ job.position }}
-            </h2>
-            <ul class="flex list-outside list-disc gap-8 text-gray-600">
-              <li class="list-none">{{ job.postedAt }}</li>
-              <li class="capitalize">{{ job.contract }}</li>
-              <li>{{ job.location }}</li>
-              <li>@{{ job.company }}</li>
-            </ul>
-          </div>
-          <div class="md:self-center">
-            <button
-              @click="confirmRemoval(job.id)"
-              class="rounded bg-turqoise-light px-3 py-2 font-bold text-turqoise hover:text-white group-hover:bg-turqoise group-hover:text-white"
-            >
-              Remove
-            </button>
-          </div>
-        </li>
-      </ul>
+      <div v-if="jobs.length > 0 && !isLoading" class="flex flex-col">
+        <Job v-for="job in jobs" :job="job" :key="job.id" />
+      </div>
       <LoadingSpinner v-else-if="isLoading" class="mt-6" />
     </Transition>
   </div>
@@ -79,9 +56,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { deleteCookie } from '../common/helpers';
-import getJobs from '../common/mixins/loadJobs';
-import LoadingSpinner from './LoadingSpinner.vue';
+import { deleteCookie } from '../../common/helpers';
+import getJobs from '../../common/mixins/loadJobs';
+import LoadingSpinner from '../LoadingSpinner.vue';
+import Job from './Job.vue';
 
 export default defineComponent({
   mixins: [getJobs],
@@ -92,6 +70,7 @@ export default defineComponent({
   },
   components: {
     LoadingSpinner,
+    Job
   },
   methods: {
     confirmRemoval(id: string) {
@@ -115,6 +94,9 @@ export default defineComponent({
   },
   created() {
     this.loadJobs();
+  },
+  provide() {
+    return { confirmRemoval: this.confirmRemoval };
   },
 });
 </script>

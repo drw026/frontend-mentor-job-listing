@@ -11,29 +11,11 @@
       enter-to-class="opacity-1 translate-y-0"
       leave-from-class="opacity-1 translate-y-0"
     >
-      <div v-if="isSucces">
-        <h1 class="mb-6 text-3xl font-bold text-turqoise-dark">Success!</h1>
-        <p>Job was successfuly added.</p>
-        <div class="mt-6 flex gap-3">
-          <router-link to="/admin" custom v-slot="{ navigate }">
-            <button
-              @click="navigate"
-              role="link"
-              class="rounded py-2 text-turqoise hover:underline"
-            >
-              Return to overview
-            </button>
-          </router-link>
-          <button
-            @click="addAnotherJob"
-            role="link"
-            class="rounded bg-turqoise-light px-3 py-2 font-bold text-turqoise hover:bg-turqoise hover:text-white"
-          >
-            Add another Job
-          </button>
-        </div>
-      </div>
+      <Message v-if="isSucces" head="Success!" addJobLabel="Add another Job">
+        <p>Job was succesfully added.</p>
+      </Message>
       <LoadingSpinner v-else-if="!isSucces && isLoading" />
+      <Message v-else-if="!isSucces && !isLoading && !!error" head="Failed!" addJobLabel="Retry">{{ error }}</Message>
       <div v-else>
         <div class="mb-6 flex justify-between">
           <h1 class="text-3xl font-bold text-turqoise-dark">Add a Job</h1>
@@ -131,7 +113,7 @@
               v-show="!showLanguagesEditor && languages.length > 0"
               class="mt-1 w-full"
             >
-              <ul class="flex gap-2 flex-wrap">
+              <ul class="flex flex-wrap gap-2">
                 <li v-for="language in languages">
                   <Language @click="editLanguage">{{ language }}</Language>
                 </li>
@@ -183,11 +165,13 @@
 import { defineComponent } from 'vue';
 import Language from '../Language.vue';
 import LoadingSpinner from '../LoadingSpinner.vue';
-import { timer, sleep } from '../../common/helpers';
+import { timer, sleep, readCookie } from '../../common/helpers';
+import Message from './Message.vue'
 
 export default defineComponent({
   data() {
     return {
+      error: '',
       isSucces: false,
       position: '',
       company: '',
@@ -205,6 +189,7 @@ export default defineComponent({
   components: {
     Language,
     LoadingSpinner,
+    Message
   },
   computed: {
     roles() {
@@ -242,12 +227,13 @@ export default defineComponent({
       this.$nextTick(() => this.$refs.languagesInput.focus());
     },
     async submitJob() {
+      const accessToken = readCookie('accessToken');
       const fetchTime = timer();
       fetchTime.start();
       this.isLoading = true;
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_FIREBASE_URL}/jobs.json`,
+          `${import.meta.env.VITE_FIREBASE_URL}/jobs.json?auth=${accessToken}`,
           {
             method: 'POST',
             body: JSON.stringify({
@@ -260,7 +246,7 @@ export default defineComponent({
               logo: '',
               new: this.new,
               position: this.position,
-              postedAt: '1d ago',
+              postedAt: new Date().toISOString(),
               role: this.role,
             }),
           },
@@ -274,6 +260,8 @@ export default defineComponent({
         this.isLoading = false;
         this.isSucces = true;
       } catch (error) {
+        this.error = error;
+        this.isLoading = false;
         console.log(error);
       }
     },

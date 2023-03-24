@@ -58,7 +58,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { deleteCookie } from '../../common/helpers';
+import { deleteCookie, readCookie } from '../../common/helpers';
 import getJobs from '../../common/mixins/loadJobs';
 import LoadingSpinner from '../LoadingSpinner.vue';
 import Job from './Job.vue';
@@ -86,8 +86,11 @@ export default defineComponent({
       this.jobId = id;
     },
     async removeJob(id: string) {
+      const accessToken = readCookie('accessToken');
       const response = await fetch(
-        `${import.meta.env.VITE_FIREBASE_URL}/jobs/${id}.json`,
+        `${
+          import.meta.env.VITE_FIREBASE_URL
+        }/jobs/${id}.json?auth=${accessToken}`,
         { method: 'DELETE' },
       );
       this.jobs = this.jobs.filter((job) => job.id !== id);

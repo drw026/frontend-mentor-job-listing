@@ -1,5 +1,7 @@
 <template>
-  <div class="container mx-auto rounded-md bg-white p-6 shadow-lg shadow-turqoise/30">
+  <div
+    class="container mx-auto rounded-md bg-white p-6 shadow-lg shadow-turqoise/30"
+  >
     <base-dialog :show="!!jobId" title="Remove job">
       Are you sure you want to delete this job ?
       <template v-slot:actions>
@@ -47,7 +49,7 @@
       leave-from-class="opacity-1 translate-y-0"
     >
       <div v-if="jobs.length > 0 && !isLoading" class="flex flex-col">
-        <Job v-for="job in jobs" :job="job" :key="job.id" />
+        <Job v-for="job in jobsSorted" :job="job" :key="job.id" />
       </div>
       <LoadingSpinner v-else-if="isLoading" class="mt-6" />
     </Transition>
@@ -70,7 +72,14 @@ export default defineComponent({
   },
   components: {
     LoadingSpinner,
-    Job
+    Job,
+  },
+  computed: {
+    jobsSorted() {
+      return this.jobs.sort(function (a, b) {
+        return a.postedAt > b.postedAt ? -1 : a.postedAt < b.postedAt ? 1 : 0;
+      });
+    },
   },
   methods: {
     confirmRemoval(id: string) {

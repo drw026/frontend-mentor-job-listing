@@ -1,22 +1,22 @@
 <template>
-    <Filters />
-    <Transition
-      mode="out-in"
-      enter-from-class="opacity-0 translate-y-[-30px]"
-      leave-to-class="opacity-0"
-      enter-active-class="transition-all duration-300 ease-out"
-      leave-active-class="transition-all duration-300 ease-in"
-      enter-to-class="opacity-1 translate-y-0"
-      leave-from-class="opacity-1 translate-y-0"
+  <Filters />
+  <Transition
+    mode="out-in"
+    enter-from-class="opacity-0 translate-y-[-30px]"
+    leave-to-class="opacity-0"
+    enter-active-class="transition-all duration-300 ease-out"
+    leave-active-class="transition-all duration-300 ease-in"
+    enter-to-class="opacity-1 translate-y-0"
+    leave-from-class="opacity-1 translate-y-0"
+  >
+    <div
+      class="flex flex-col gap-12 md:gap-6"
+      v-if="jobs.length > 0 && !isLoading"
     >
-      <div
-        class="flex flex-col gap-12 md:gap-6"
-        v-if="jobs.length > 0 && !isLoading"
-      >
-        <Job v-for="job in filteredJobs" :job="job" :key="job.id" />
-      </div>
-      <LoadingSpinner v-else-if="isLoading" class="mt-8" />
-    </Transition>
+      <Job v-for="job in filteredJobs" :job="job" :key="job.id" />
+    </div>
+    <LoadingSpinner v-else-if="isLoading" class="mt-8" />
+  </Transition>
 </template>
 
 <script lang="ts">
@@ -43,20 +43,24 @@ export default defineComponent({
   },
   computed: {
     filteredJobs() {
-      return this.jobs.filter((job) => {
-        const showRole =
-          this.selectedRoleFilters.length === 0 ||
-          this.selectedRoleFilters.includes(job.role);
-        const showLevel =
-          this.selectedLevelFilters.length === 0 ||
-          this.selectedLevelFilters.includes(job.level);
-        const showLanguages =
-          this.selectedLanguageFilters.length === 0 ||
-          job.languages.some((language: string) =>
-            this.selectedLanguageFilters.includes(language),
-          );
-        return showRole && showLevel && showLanguages;
-      });
+      return this.jobs
+        .filter((job) => {
+          const showRole =
+            this.selectedRoleFilters.length === 0 ||
+            this.selectedRoleFilters.includes(job.role);
+          const showLevel =
+            this.selectedLevelFilters.length === 0 ||
+            this.selectedLevelFilters.includes(job.level);
+          const showLanguages =
+            this.selectedLanguageFilters.length === 0 ||
+            job.languages.some((language: string) =>
+              this.selectedLanguageFilters.includes(language),
+            );
+          return showRole && showLevel && showLanguages;
+        })
+        .sort(function (a, b) {
+          return a.postedAt > b.postedAt ? -1 : a.postedAt < b.postedAt ? 1 : 0;
+        });
     },
   },
   methods: {

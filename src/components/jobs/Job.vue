@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative flex cursor-pointer flex-col gap-2 rounded-md bg-white p-5 pt-9 shadow-lg shadow-turqoise/30 md:flex-row md:gap-7 md:pt-10 md:p-10 before:hover:content-[''] before:hover:absolute before:hover:w-1 before:hover:h-full before:hover:top-0 before:hover:left-0 before:hover:bg-turqoise before:hover:rounded-l-md"
+    class="relative flex cursor-pointer flex-col gap-2 rounded-md bg-white p-5 pt-9 shadow-lg shadow-turqoise/30 md:flex-row md:gap-7 md:pt-10 md:p-10 before:hover:content-[''] before:hover:absolute before:hover:w-[5px] before:hover:h-full before:hover:top-0 before:hover:left-0 before:hover:bg-turqoise before:hover:rounded-l-md"
   >
     <img
       v-if="job.logo"
@@ -26,7 +26,7 @@
       <h2 class="font-spartan text-lg md:text-2xl font-bold text-turqoise-dark">{{ job.position }}</h2>
       <ul class="flex list-outside list-disc gap-8 text-zinc-500">
         <li class="list-none">{{ job.postedAt }}</li>
-        <li class="pl-2">{{ job.contract }}</li>
+        <li class="pl-2 capitalize">{{ job.contract }}</li>
         <li class="pl-2">{{ job.location }}</li>
       </ul>
     </div>

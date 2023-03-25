@@ -15,7 +15,12 @@
         <p>Job was succesfully added.</p>
       </Message>
       <LoadingSpinner v-else-if="!isSucces && isLoading" />
-      <Message v-else-if="!isSucces && !isLoading && !!error" head="Failed!" addJobLabel="Retry">{{ error }}</Message>
+      <Message
+        v-else-if="!isSucces && !isLoading && !!error"
+        head="Failed!"
+        addJobLabel="Retry"
+        >{{ error }}</Message
+      >
       <div v-else>
         <div class="mb-6 flex justify-between">
           <h1 class="text-3xl font-bold text-turqoise-dark">Add a Job</h1>
@@ -46,6 +51,19 @@
               id="company"
               v-model.trim="company"
               class="mt-1 block w-full rounded-md border-gray-300 focus:border-turqoise focus:ring focus:ring-turqoise-light focus:ring-offset-0"
+            />
+          </label>
+          <label for="logo" class="mt-4 block">
+            <span class="text-lg font-bold">Logo</span>
+            <span class="text-xs">
+              (excepted file types: .svg, .png, .jpg)</span
+            >
+            <input
+              class="mt-1 block w-full rounded-md border-[1px] border-solid border-gray-300 bg-clip-padding px-3 py-2 file:-mx-3 file:-my-2 file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-turqoise-light file:px-3 file:py-2 file:font-bold file:text-turqoise file:[margin-inline-end:0.75rem] hover:file:bg-turqoise hover:file:text-white focus:border-turqoise focus:outline focus:outline-offset-0 focus:outline-turqoise-light"
+              type="file"
+              id="logo"
+              @input="addLogo"
+              accept=".svg, .png, .jpg"
             />
           </label>
           <label for="contract" class="mt-4 block">
@@ -166,7 +184,7 @@ import { defineComponent } from 'vue';
 import Language from '../Language.vue';
 import LoadingSpinner from '../LoadingSpinner.vue';
 import { timer, sleep, readCookie } from '../../common/helpers';
-import Message from './Message.vue'
+import Message from './Message.vue';
 
 export default defineComponent({
   data() {
@@ -175,6 +193,7 @@ export default defineComponent({
       isSucces: false,
       position: '',
       company: '',
+      logo: '',
       contract: '',
       location: '',
       role: '',
@@ -189,7 +208,7 @@ export default defineComponent({
   components: {
     Language,
     LoadingSpinner,
-    Message
+    Message,
   },
   computed: {
     roles() {
@@ -214,6 +233,7 @@ export default defineComponent({
       this.new = false;
       this.featured = false;
       this.languages = [];
+      this.logo = '';
     },
     convertLanguage(input: string) {
       const languages = input.split(',');
@@ -225,6 +245,11 @@ export default defineComponent({
     editLanguage() {
       this.showLanguagesEditor = !this.showLanguagesEditor;
       this.$nextTick(() => this.$refs.languagesInput.focus());
+    },
+    addLogo(event: Event) {
+      this.logo = (
+        (event.target.files as HTMLInputElement)[0] || { name: '' }
+      ).name;
     },
     async submitJob() {
       const accessToken = readCookie('accessToken');
@@ -243,7 +268,7 @@ export default defineComponent({
               languages: this.languages,
               level: this.level,
               location: this.location,
-              logo: '',
+              logo: this.logo,
               new: this.new,
               position: this.position,
               postedAt: new Date().toISOString(),

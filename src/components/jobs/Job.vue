@@ -28,8 +28,8 @@
       </h2>
       <ul class="flex list-outside list-disc gap-8 text-zinc-500">
         <li class="list-none">{{ relativePostedAt }}</li>
-        <li class="pl-2 capitalize">{{ job.contract }}</li>
-        <li class="pl-2">{{ job.location }}</li>
+        <li class="pl-1 capitalize">{{ job.contract }}</li>
+        <li class="pl-1">{{ job.location }}</li>
       </ul>
     </div>
     <div

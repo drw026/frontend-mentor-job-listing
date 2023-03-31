@@ -44,35 +44,28 @@
   </Transition>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script lang="ts" setup>
+import { inject, computed } from 'vue';
 import SelectedFilter from './SelectedFilter.vue';
 
-export default defineComponent({
-  components: { SelectedFilter },
-  inject: [
-    'selectedLanguageFilters',
-    'removeLanguageFilter',
-    'selectedRoleFilters',
-    'removeRoleFilter',
-    'selectedLevelFilters',
-    'removeLevelFilter',
-  ],
-  methods: {
-    resetAllFilters() {
-      this.removeLanguageFilter();
-      this.removeRoleFilter();
-      this.removeLevelFilter();
-    },
-  },
-  computed: {
-    isFilters() {
-      return (
-        this.selectedLanguageFilters.length > 0 ||
-        this.selectedRoleFilters.length > 0 ||
-        this.selectedLevelFilters.length > 0
-      );
-    },
-  },
+const selectedLanguageFilters = inject('selectedLanguageFilters');
+const removeLanguageFilter = inject('removeLanguageFilter');
+const selectedRoleFilters = inject('selectedRoleFilters');
+const removeRoleFilter = inject('removeRoleFilter');
+const selectedLevelFilters = inject('selectedLevelFilters');
+const removeLevelFilter = inject('removeLevelFilter');
+
+const isFilters = computed(() => {
+  return (
+    selectedLanguageFilters.length > 0 ||
+    selectedRoleFilters.length > 0 ||
+    selectedLevelFilters.length > 0
+  );
 });
+
+const resetAllFilters = () => {
+  removeLanguageFilter();
+  removeRoleFilter();
+  removeLevelFilter();
+};
 </script>

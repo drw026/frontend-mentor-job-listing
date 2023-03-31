@@ -11,14 +11,20 @@
       enter-to-class="opacity-1 translate-y-0"
       leave-from-class="opacity-1 translate-y-0"
     >
-      <Message v-if="isSucces" head="Success!" addJobLabel="Add another Job">
+      <Message
+        v-if="isSuccess"
+        head="Success!"
+        addJobLabel="Add another Job"
+        @add-another-job="addAnotherJob"
+      >
         <p>Job was succesfully added.</p>
       </Message>
-      <LoadingSpinner v-else-if="!isSucces && isLoading" />
+      <LoadingSpinner v-else-if="!isSuccess && isLoading" />
       <Message
-        v-else-if="!isSucces && !isLoading && !!error"
+        v-else-if="!isSuccess && !isLoading && !!error"
         head="Failed!"
         addJobLabel="Retry"
+        @add-another-job="addAnotherJob"
         >{{ error }}</Message
       >
       <div v-else>
@@ -35,24 +41,12 @@
           </router-link>
         </div>
         <form @submit.prevent="" autocomplete="off">
-          <label for="position">
-            <span class="text-lg font-bold">Position</span>
-            <input
-              type="text"
-              id="position"
-              v-model.trim="position"
-              class="mt-1 block w-full rounded-md border-gray-300 focus:border-turqoise focus:ring focus:ring-turqoise-light focus:ring-offset-0"
-            />
-          </label>
-          <label for="company" class="mt-4 block">
-            <span class="text-lg font-bold">Company</span>
-            <input
-              type="text"
-              id="company"
-              v-model.trim="company"
-              class="mt-1 block w-full rounded-md border-gray-300 focus:border-turqoise focus:ring focus:ring-turqoise-light focus:ring-offset-0"
-            />
-          </label>
+          <FormInput
+            id="position"
+            label="Position"
+            v-model:datamodel="position"
+          />
+          <FormInput id="company" label="Company" v-model:datamodel="company" />
           <label for="logo" class="mt-4 block">
             <span class="text-lg font-bold">Logo</span>
             <span class="text-xs">
@@ -66,57 +60,32 @@
               accept=".svg, .png, .jpg"
             />
           </label>
-          <label for="contract" class="mt-4 block">
-            <span class="text-lg font-bold">Contract</span>
-            <select
-              v-model="contract"
-              id="contract"
-              class="mt-1 block w-full rounded-md border-gray-300 focus:border-turqoise focus:ring focus:ring-turqoise-light focus:ring-offset-0"
-            >
-              <option disabled value="">Select a contract</option>
-              <option
-                :value="contract.toLowerCase()"
-                v-for="contract in contracts"
-              >
-                {{ contract }}
-              </option>
-            </select>
-          </label>
-          <label for="location" class="mt-4 block">
-            <span class="text-lg font-bold">Location</span>
-            <input
-              type="text"
-              id="location"
-              v-model.trim="location"
-              class="mt-1 block w-full rounded-md border-gray-300 focus:border-turqoise focus:ring focus:ring-turqoise-light focus:ring-offset-0"
-            />
-          </label>
-          <label for="role" class="mt-4 block">
-            <span class="text-lg font-bold">Role</span>
-            <select
-              id="role"
-              v-model="role"
-              class="mt-1 block w-full rounded-md border-gray-300 focus:border-turqoise focus:ring focus:ring-turqoise-light focus:ring-offset-0"
-            >
-              <option disabled value="">Select a role</option>
-              <option :value="role.toLowerCase()" v-for="role in roles">
-                {{ role }}
-              </option>
-            </select>
-          </label>
-          <label for="level" class="mt-4 block">
-            <span class="text-lg font-bold">Level</span>
-            <select
-              id="level"
-              v-model="level"
-              class="mt-1 block w-full rounded-md border-gray-300 focus:border-turqoise focus:ring focus:ring-turqoise-light focus:ring-offset-0"
-            >
-              <option disabled value="">Select a level</option>
-              <option :value="level.toLowerCase()" v-for="level in levels">
-                {{ level }}
-              </option>
-            </select>
-          </label>
+          <FormSelect
+            id="contract"
+            label="Contract"
+            v-model:datamodel="contract"
+            placeholder="Select a contract"
+            :options="contracts"
+          />
+          <FormInput
+            id="location"
+            label="Location"
+            v-model:datamodel="location"
+          />
+          <FormSelect
+            id="role"
+            label="Role"
+            v-model:datamodel="role"
+            placeholder="Select a role"
+            :options="roles"
+          />
+          <FormSelect
+            id="level"
+            label="Level"
+            v-model:datamodel="level"
+            placeholder="Select a level"
+            :options="levels"
+          />
           <label for="languages" class="mt-4 block">
             <span class="text-lg font-bold">Languages</span>
             <span class="text-xs"> (separate with a comma)</span>
@@ -146,25 +115,12 @@
               </ul>
             </div>
           </label>
-          <label for="new" class="mt-4 block">
-            <input
-              id="new"
-              type="checkbox"
-              class="rounded border-gray-300 text-turqoise focus:border-turqoise focus:ring focus:ring-turqoise-light focus:ring-opacity-50 focus:ring-offset-0"
-              v-model="new"
-            />
-            <span class="ml-2">"New" label</span>
-          </label>
-          <label for="featured" class="mt-2 block">
-            <input
-              id="featured"
-              type="checkbox"
-              class="rounded border-gray-300 text-turqoise focus:border-turqoise focus:ring focus:ring-turqoise-light focus:ring-opacity-50 focus:ring-offset-0"
-              v-model="featured"
-            />
-            <span class="ml-2">"Featured" label</span>
-          </label>
-
+          <FormCheckbox id="newLabel" label="New label" v-model:datamodel="newLabel" />
+          <FormCheckbox
+            id="featuredLabel"
+            label="Featured label"
+            v-model:datamodel="featuredLabel"
+          />
           <div class="mt-4 flex justify-end gap-3">
             <button
               @click="submitJob"
@@ -179,117 +135,58 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script lang="ts" setup>
+import { ref, computed, nextTick } from 'vue';
 import Language from '../Language.vue';
 import LoadingSpinner from '../LoadingSpinner.vue';
-import { timer, sleep, readCookie } from '../../common/helpers';
 import Message from './Message.vue';
+import FormInput from '../FormInput.vue';
+import FormSelect from '../FormSelect.vue';
+import FormCheckbox from '../FormCheckbox.vue';
+import useSubmitJob from '../../common/composables/useSubmitJob';
 
-export default defineComponent({
-  data() {
-    return {
-      error: '',
-      isSucces: false,
-      position: '',
-      company: '',
-      logo: '',
-      contract: '',
-      location: '',
-      role: '',
-      level: '',
-      new: false,
-      featured: false,
-      languages: [],
-      showLanguagesEditor: false,
-      isLoading: false,
-    };
-  },
-  components: {
-    Language,
-    LoadingSpinner,
-    Message,
-  },
-  computed: {
-    roles() {
-      return ['Frontend', 'Fullstack', 'Backend'];
-    },
-    levels() {
-      return ['Senior', 'Junior', 'Midweight'];
-    },
-    contracts() {
-      return ['Full Time', 'Part Time', 'Contract'];
-    },
-  },
-  methods: {
-    addAnotherJob() {
-      this.isSucces = false;
-      this.position = '';
-      this.company = '';
-      this.contract = '';
-      this.location = '';
-      this.role = '';
-      this.level = '';
-      this.new = false;
-      this.featured = false;
-      this.languages = [];
-      this.logo = '';
-    },
-    convertLanguage(input: string) {
-      const languages = input.split(',');
-      this.showLanguagesEditor = false;
-      this.languages = languages
-        .map((language) => language.trim())
-        .filter((language) => language);
-    },
-    editLanguage() {
-      this.showLanguagesEditor = !this.showLanguagesEditor;
-      this.$nextTick(() => this.$refs.languagesInput.focus());
-    },
-    addLogo(event: Event) {
-      this.logo = (
-        (event.target.files as HTMLInputElement)[0] || { name: '' }
-      ).name;
-    },
-    async submitJob() {
-      const accessToken = readCookie('accessToken');
-      const fetchTime = timer();
-      fetchTime.start();
-      this.isLoading = true;
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_FIREBASE_URL}/jobs.json?auth=${accessToken}`,
-          {
-            method: 'POST',
-            body: JSON.stringify({
-              company: this.company,
-              contract: this.contract,
-              featured: this.featured,
-              languages: this.languages,
-              level: this.level,
-              location: this.location,
-              logo: this.logo,
-              new: this.new,
-              position: this.position,
-              postedAt: new Date().toISOString(),
-              role: this.role,
-            }),
-          },
-        );
+const {
+  isLoading,
+  isSuccess,
+  error,
+  submitJob,
+  resetJobForm,
+  company,
+  contract,
+  featuredLabel,
+  level,
+  newLabel,
+  position,
+  role,
+  languages,
+  logo,
+  location
+} = useSubmitJob();
 
-        const stopTime = fetchTime.stop();
+const showLanguagesEditor = ref(false);
+const languagesInput = ref(null);
 
-        if (!response.ok) throw new Error('Response not ok');
-        if (stopTime < 1000) await sleep(1000 - stopTime);
+const roles = computed(() => ['Frontend', 'Fullstack', 'Backend']);
+const levels = computed(() => ['Senior', 'Junior', 'Midweight']);
+const contracts = computed(() => ['Full Time', 'Part Time', 'Contract']);
 
-        this.isLoading = false;
-        this.isSucces = true;
-      } catch (error) {
-        this.error = error;
-        this.isLoading = false;
-        console.log(error);
-      }
-    },
-  },
-});
+const convertLanguage = (input: string) => {
+  const languageList = input.split(',');
+  showLanguagesEditor.value = false;
+  languages.value = languageList
+    .map((language) => language.trim())
+    .filter((language) => language);
+};
+
+const editLanguage = async () => {
+  showLanguagesEditor.value = !showLanguagesEditor.value;
+  await nextTick();
+  languagesInput.value.focus();
+};
+
+const addLogo = (event: Event) => {
+  logo.value = (
+    (event.target.files as HTMLInputElement)[0] || { name: '' }
+  ).name;
+};
 </script>

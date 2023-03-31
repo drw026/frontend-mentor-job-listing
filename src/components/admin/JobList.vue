@@ -56,59 +56,43 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import { deleteCookie, readCookie } from '../../common/helpers';
-import getJobs from '../../common/mixins/loadJobs';
-import LoadingSpinner from '../LoadingSpinner.vue';
+<script lang="ts" setup>
+import { ref, defineComponent, computed, provide } from 'vue';
 import Job from './Job.vue';
+import LoadingSpinner from '../LoadingSpinner.vue';
+import useJobs from '../../common/composables/useJobs';
+import { readCookie, deleteCookie } from '../../common/helpers';
+import { useRouter } from 'vue-router'
 
-export default defineComponent({
-  mixins: [getJobs],
-  data() {
-    return {
-      jobId: '',
-    };
-  },
-  components: {
-    LoadingSpinner,
-    Job,
-  },
-  computed: {
-    jobsSorted() {
-      return this.jobs.sort(function (a, b) {
-        return a.postedAt > b.postedAt ? -1 : a.postedAt < b.postedAt ? 1 : 0;
-      });
-    },
-  },
-  methods: {
-    confirmRemoval(id: string) {
-      this.jobId = id;
-    },
-    async removeJob(id: string) {
-      const accessToken = readCookie('accessToken');
-      const response = await fetch(
-        `${
-          import.meta.env.VITE_FIREBASE_URL
-        }/jobs/${id}.json?auth=${accessToken}`,
-        { method: 'DELETE' },
-      );
-      this.jobs = this.jobs.filter((job) => job.id !== id);
-      this.jobId = '';
-    },
-    cancelRemoval() {
-      this.jobId = '';
-    },
-    logout() {
-      deleteCookie('accessToken');
-      this.$router.push('/login');
-    },
-  },
-  created() {
-    this.loadJobs();
-  },
-  provide() {
-    return { confirmRemoval: this.confirmRemoval };
-  },
+const jobId = ref('');
+const { jobs, isLoading } = useJobs();
+const router = useRouter();
+
+provide('confirmRemoval', (id: string) => { jobId.value = id });
+
+const jobsSorted = computed(() => {
+  return jobs.value.sort((a, b) =>
+    a.postedAt > b.postedAt ? -1 : a.postedAt < b.postedAt ? 1 : 0,
+  );
 });
+
+const removeJob = async (id: string) => {
+  const accessToken = readCookie('accessToken');
+  const response = await fetch(
+    `${import.meta.env.VITE_FIREBASE_URL}/jobs/${id}.json?auth=${accessToken}`,
+    { method: 'DELETE' },
+  );
+  jobs.value = jobs.value.filter((job) => job.id !== id);
+  jobId.value = '';
+};
+
+const cancelRemoval = () => {
+  jobId.value = '';
+}
+
+const logout = () => {
+  deleteCookie('accessToken')
+  router.push('/login')
+}
 </script>
+

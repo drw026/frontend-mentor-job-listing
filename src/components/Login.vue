@@ -27,29 +27,27 @@
   </page>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script lang="ts" setup>
+import { useRoute, useRouter } from 'vue-router';
 import { auth } from '../common/firebaseConfig';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { setCookie } from '../common/helpers';
 
-export default defineComponent({
-  methods: {
-    async googleSignIn () {
-      const provider = new GoogleAuthProvider();
-      try {
-        const response = await signInWithPopup(auth, provider);
+const router = useRouter();
+const route = useRoute();
 
-        if (response.user.uid !== import.meta.env.VITE_ADMIN_USER_ID)
-          return alert('You are not authorized to enter!');
+const googleSignIn = async () => {
+  const provider = new GoogleAuthProvider();
+  try {
+    const response = await signInWithPopup(auth, provider);
 
-        setCookie('accessToken', response.user.accessToken);
+    if (response.user.uid !== import.meta.env.VITE_ADMIN_USER_ID)
+      return alert('You are not authorized to enter!');
 
-        this.$router.replace('/' + (this.$route.query.redirect || 'admin'));
-      } catch (error) {
-        console.error(error);
-      }
-    },
-  },
-});
+    setCookie('accessToken', response.user.accessToken);
+    router.replace('/' + (route.query.redirect || 'admin'));
+  } catch (error) {
+    console.error(error);
+  }
+};
 </script>

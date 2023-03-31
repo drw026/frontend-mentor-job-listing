@@ -13,7 +13,7 @@
         </button>
       </router-link>
       <button
-        @click="addAnotherJob"
+        @click="$emit('addAnotherJob')"
         role="link"
         class="rounded bg-turqoise-light px-3 py-2 font-bold text-turqoise hover:bg-turqoise hover:text-white"
       >
@@ -23,11 +23,9 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
+import { defineProps, defineEmits } from 'vue';
 
-export default defineComponent({
-  props: ['head', 'addJobLabel']
-})
-
+const props = defineProps(['head', 'addJobLabel']);
+const emit = defineEmits(['addAnotherJob'])
 </script>

@@ -36,44 +36,43 @@
       v-if="isLanguages"
       class="mt-2 flex flex-1 flex-wrap items-center gap-4 border-t-[1px] border-gray-400 pt-4 md:mt-0 md:flex-wrap md:justify-end md:border-none md:pt-0"
     >
-      <Skills v-if="job.role" @click="addRoleFilter(job.role)">{{
+      <Language v-if="job.role" @click="addRoleFilter(job.role)">{{
         job.role
-      }}</Skills>
-      <Skills v-if="job.level" @click="addLevelFilter(job.level)">{{
+      }}</Language>
+      <Language v-if="job.level" @click="addLevelFilter(job.level)">{{
         job.level
-      }}</Skills>
-      <Skills
+      }}</Language>
+      <Language
         v-for="language in job.languages"
         @click="addLanguageFilter(language)"
         :key="job.language"
       >
         {{ language }}
-      </Skills>
+      </Language>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import Language from '../Language.vue';
+<script lang="ts" setup>
+import { defineProps, inject, computed, toRefs } from 'vue';
 import { relativeDate } from '../../common/helpers';
+import Language from '../Language.vue';
 
-export default defineComponent({
-  components: {
-    Skills: Language,
-  },
-  props: ['job'],
-  inject: ['addLanguageFilter', 'addRoleFilter', 'addLevelFilter'],
-  computed: {
-    logoSrc() {
-      return `./images/${this.job.logo}`;
-    },
-    isLanguages() {
-      return this.job.languages.length > 0 && this.job.role && this.job.level;
-    },
-    relativePostedAt() {
-      return relativeDate(this.job.postedAt);
-    },
-  },
+const props = defineProps(['job']);
+const { job } = toRefs(props)
+const addLanguageFilter = inject('addLanguageFilter');
+const addLevelFilter = inject('addLevelFilter');
+const addRoleFilter = inject('addRoleFilter');
+
+const logoSrc = computed(() => {
+  return `./images/${job.value.logo}`;
+});
+
+const isLanguages = computed(() => {
+  return job.value.languages.length > 0 && job.value.role && job.value.level;
+});
+
+const relativePostedAt = computed(() => {
+  return relativeDate(job.value.postedAt);
 });
 </script>

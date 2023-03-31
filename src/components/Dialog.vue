@@ -5,7 +5,8 @@
       @click="tryClose"
       class="fixed inset-0 z-10 h-[100vh] w-full bg-turqoise-dark/75"
     ></div>
-    <transition name="dialog"
+    <transition
+      name="dialog"
       enter-from-class="opacity-0 scale-75"
       leave-to-class="opacity-0 scale-75"
       enter-active-class="transition all duration-300 ease-out"
@@ -26,7 +27,7 @@
         <section class="px-4 py-3">
           <slot></slot>
         </section>
-        <menu v-if="!fixed" class="m-0 flex justify-end px-4 py-3 gap-2">
+        <menu v-if="!fixed" class="m-0 flex justify-end gap-2 px-4 py-3">
           <slot name="actions">
             <button
               class="rounded bg-turqoise-light px-3 py-2 font-bold text-turqoise hover:bg-turqoise hover:text-white"
@@ -41,16 +42,14 @@
   </teleport>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-export default defineComponent({
-  props: ['show', 'title', 'fixed', 'confirm'],
-  emits: ['close', 'confirm'],
-  methods: {
-    tryClose() {
-      if (this.fixed) return;
-      this.$emit('close');
-    },
-  },
-});
+<script lang="ts" setup>
+  import { defineProps, defineEmits } from 'vue';
+
+  const props = defineProps(['show', 'title', 'fixed', 'confirm']);
+  const emit = defineEmits(['close', 'confirm']);
+
+  const tryClose = () => {
+    if (this.fixed) return;
+    emit('close');
+  };
 </script>

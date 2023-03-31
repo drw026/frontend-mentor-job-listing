@@ -19,100 +19,87 @@
   </Transition>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script lang="ts" setup>
+import { ref, computed, provide } from 'vue';
 import Job from './Job.vue';
 import Filters from './Filters.vue';
 import LoadingSpinner from '../LoadingSpinner.vue';
-import getJobs from '../../common/mixins/loadJobs';
+import useJobs from '../../common/composables/useJobs';
 
-export default defineComponent({
-  mixins: [getJobs],
-  data() {
-    return {
-      error: false,
-      selectedLanguageFilters: [],
-      selectedRoleFilters: [],
-      selectedLevelFilters: [],
-    };
-  },
-  components: {
-    Job,
-    Filters,
-    LoadingSpinner,
-  },
-  computed: {
-    filteredJobs() {
-      return this.jobs
-        .filter((job) => {
-          const showRole =
-            this.selectedRoleFilters.length === 0 ||
-            this.selectedRoleFilters.includes(job.role);
-          const showLevel =
-            this.selectedLevelFilters.length === 0 ||
-            this.selectedLevelFilters.includes(job.level);
-          const showLanguages =
-            this.selectedLanguageFilters.length === 0 ||
-            job.languages.some((language: string) =>
-              this.selectedLanguageFilters.includes(language),
-            );
-          return showRole && showLevel && showLanguages;
-        })
-        .sort(function (a, b) {
-          return a.postedAt > b.postedAt ? -1 : a.postedAt < b.postedAt ? 1 : 0;
-        });
-    },
-  },
-  methods: {
-    addLanguageFilter(filter: string) {
-      if (this.selectedLanguageFilters.includes(filter)) return;
-      this.selectedLanguageFilters.push(filter);
-    },
-    removeLanguageFilter(filter?: string) {
-      if (!filter) return this.selectedLanguageFilters.splice(0);
-      this.selectedLanguageFilters.splice(
-        this.selectedLanguageFilters.indexOf(filter),
-        1,
-      );
-    },
-    addRoleFilter(filter: string) {
-      if (this.selectedRoleFilters.includes(filter)) return;
-      this.selectedRoleFilters.push(filter);
-    },
-    removeRoleFilter(filter?: string) {
-      if (!filter) return this.selectedRoleFilters.splice(0);
-      this.selectedRoleFilters.splice(
-        this.selectedRoleFilters.indexOf(filter),
-        1,
-      );
-    },
-    addLevelFilter(filter: string) {
-      if (this.selectedLevelFilters.includes(filter)) return;
-      this.selectedLevelFilters.push(filter);
-    },
-    removeLevelFilter(filter?: string) {
-      if (!filter) return this.selectedLevelFilters.splice(0);
-      this.selectedLevelFilters.splice(
-        this.selectedLevelFilters.indexOf(filter),
-        1,
-      );
-    },
-  },
-  created() {
-    this.loadJobs();
-  },
-  provide() {
-    return {
-      selectedLanguageFilters: this.selectedLanguageFilters,
-      addLanguageFilter: this.addLanguageFilter,
-      removeLanguageFilter: this.removeLanguageFilter,
-      selectedRoleFilters: this.selectedRoleFilters,
-      addRoleFilter: this.addRoleFilter,
-      removeRoleFilter: this.removeRoleFilter,
-      selectedLevelFilters: this.selectedLevelFilters,
-      addLevelFilter: this.addLevelFilter,
-      removeLevelFilter: this.removeLevelFilter,
-    };
-  },
+const error = ref(false);
+const selectedLanguageFilters = ref([]);
+const selectedLevelFilters = ref([]);
+const selectedRoleFilters = ref([]);
+
+const { jobs, isLoading } = useJobs();
+
+const filteredJobs = computed(() => {
+  return jobs.value
+    .filter((job) => {
+      const showRole =
+        selectedRoleFilters.value.length === 0 ||
+        selectedRoleFilters.value.includes(job.role);
+      const showLevel =
+        selectedLevelFilters.value.length === 0 ||
+        selectedLevelFilters.value.includes(job.level);
+      const showLanguages =
+        selectedLanguageFilters.value.length === 0 ||
+        job.languages.some((language: string) =>
+          selectedLanguageFilters.value.includes(language),
+        );
+      return showRole && showLevel && showLanguages;
+    })
+    .sort(function (a, b) {
+      return a.postedAt > b.postedAt ? -1 : a.postedAt < b.postedAt ? 1 : 0;
+    });
 });
+
+const addLanguageFilter = (filter: string) => {
+  if (selectedLanguageFilters.value.includes(filter)) return;
+  selectedLanguageFilters.value.push(filter);
+};
+
+const removeLanguageFilter = (filter?: string) => {
+  if (!filter) return selectedLanguageFilters.value.splice(0);
+  selectedLanguageFilters.value.splice(
+    selectedLanguageFilters.value.indexOf(filter),
+    1,
+  );
+};
+
+const addRoleFilter = (filter: string) => {
+  if (selectedRoleFilters.value.includes(filter)) return;
+  selectedRoleFilters.value.push(filter);
+};
+
+const removeRoleFilter = (filter?: string) => {
+  if (!filter) return selectedRoleFilters.value.splice(0);
+  selectedRoleFilters.value.splice(
+    selectedRoleFilters.value.indexOf(filter),
+    1,
+  );
+};
+
+const addLevelFilter = (filter: string) => {
+  if (selectedLevelFilters.value.includes(filter)) return;
+  selectedLevelFilters.value.push(filter);
+};
+
+const removeLevelFilter = (filter?: string) => {
+  if (!filter) return selectedLevelFilters.value.splice(0);
+  selectedLevelFilters.value.splice(
+    selectedLevelFilters.value.indexOf(filter),
+    1,
+  );
+};
+
+provide('selectedLanguageFilters', selectedLanguageFilters.value);
+provide('addLanguageFilter', addLanguageFilter);
+provide('removeLanguageFilter', removeLanguageFilter);
+provide('selectedRoleFilters', selectedRoleFilters.value);
+provide('addRoleFilter', addRoleFilter);
+provide('removeRoleFilter', removeRoleFilter);
+provide('selectedLevelFilters', selectedLevelFilters.value);
+provide('addLevelFilter', addLevelFilter);
+provide('removeLevelFilter', removeLevelFilter);
 </script>

@@ -11,8 +11,6 @@ This is a solution to the [Job listings with filtering challenge on Frontend Men
 - [My process](#my-process)
   - [Built with](#built-with)
   - [What I learned](#what-i-learned)
-  - [Continued development](#continued-development)
-  - [Useful resources](#useful-resources)
 - [Author](#author)
 - [Acknowledgments](#acknowledgments)
 
@@ -28,19 +26,23 @@ Users should be able to:
 
 #### Additional challenge
 
-- [x] Use VueJS
+- [x] Use VueJS (utilizing both Option API and Composition API)
 - [x] Persist and fetch data from external source (Firebase Realtime Database)
 - [x] Add Admin route where jobs can be added and removed
 - [x] Admin route is protected by authentication
+- [x] Google OAuth
+- [ ] Use tRPC to fetch data from Firebase
 
 ### Screenshot
 
-![](./screenshot.jpg)
-WIP
+![Jobs list](./screenshots/job-list.png)
+![Filtered Jobs list](./screenshots/filtered-job-list.png)
+![Login](./screenshots/login.png)
+![Admin Job list](./screenshots/admin-job-list.png)
+![Confirm removal](./screenshots/confirm-removal.png)
+![Add Job](./screenshots/add-job.png)
 
 ### Links
-
-WIP
 
 ## My process
 
@@ -52,22 +54,14 @@ WIP
 
 ### What I learned
 
-WIP
-
-### Continued development
-
-WIP
-
-### Useful resources
-
-WIP
+- Create Web application with VueJS (both Option API and Composition API)
+- Utilize Tailwind CSS for styling
+- Use Firebase for persist data
 
 ## Author
 
 - Website - [Andrew Reasoa](https://www.andrewreasoa.com)
-- Frontend Mentor - [@yourusername](https://www.frontendmentor.io/profile/yourusername)
+- Frontend Mentor - [@yourusername](https://www.frontendmentor.io/profile/drw026)
 
 ## Acknowledgments
 Maximilian Schwarzmüller, for his excellent [VueJS course](https://www.udemy.com/course/vuejs-2-the-complete-guide) on Udemy.
-
-WIP

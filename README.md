@@ -54,7 +54,7 @@ Users should be able to:
 
 ### What I learned
 
-- Create Web application with VueJS (both Option API and Composition API)
+- Create a Web application with VueJS both Option API and Composition API. (Check option-api branch to view the app created with the Option API)
 - Utilize Tailwind CSS for styling
 - Use Firebase for persist data
 

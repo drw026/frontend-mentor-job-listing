@@ -6,11 +6,11 @@
       <h2 class="text-lg font-bold text-turqoise-dark">
         {{ job.position }}
       </h2>
-      <ul class="flex list-outside list-disc gap-8 text-gray-600">
+      <ul class="flex list-inside list-disc text-gray-600">
         <li class="list-none">{{ relativePostedAt }}</li>
-        <li class="capitalize">{{ job.contract }}</li>
-        <li>{{ job.location }}</li>
-        <li>@{{ job.company }}</li>
+        <li class="pl-4 capitalize">{{ job.contract }}</li>
+        <li class="pl-4">{{ job.location }}</li>
+        <li class="pl-4">@{{ job.company }}</li>
       </ul>
     </div>
     <div class="md:self-center">

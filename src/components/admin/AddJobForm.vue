@@ -15,7 +15,7 @@
         v-if="isSuccess"
         head="Success!"
         addJobLabel="Add another Job"
-        @add-another-job="addAnotherJob"
+        @add-another-job="resetJobForm"
       >
         <p>Job was succesfully added.</p>
       </Message>
@@ -24,7 +24,7 @@
         v-else-if="!isSuccess && !isLoading && !!error"
         head="Failed!"
         addJobLabel="Retry"
-        @add-another-job="addAnotherJob"
+        @add-another-job="resetJobForm"
         >{{ error }}</Message
       >
       <div v-else>

@@ -1,8 +1,24 @@
 import { ref } from 'vue';
+import type { Ref } from 'vue';
 import { timer, sleep } from '../helpers';
 
+type Job = {
+  id: string,
+  company: string,
+  contract: string,
+  featuredLabel: boolean,
+  languages: string[],
+  level: string,
+  location: string,
+  logo: string,
+  newLabel: boolean,
+  position: string,
+  role: string,
+  postedAt: string,
+}
+
 export default function useJobs() {
-  const jobs = ref([]);
+  const jobs: Ref<Job[]> = ref([]);
   const isLoading = ref(false);
   const fetchTime = timer();
 

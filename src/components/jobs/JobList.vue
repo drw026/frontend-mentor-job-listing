@@ -21,15 +21,15 @@
 
 <script lang="ts" setup>
 import { ref, computed, provide } from 'vue';
+import type { Ref } from 'vue' 
 import Job from './Job.vue';
 import Filters from './Filters.vue';
 import LoadingSpinner from '../LoadingSpinner.vue';
 import useJobs from '../../common/composables/useJobs';
 
-const error = ref(false);
-const selectedLanguageFilters = ref([]);
-const selectedLevelFilters = ref([]);
-const selectedRoleFilters = ref([]);
+const selectedLanguageFilters: Ref<string[]> = ref([]);
+const selectedLevelFilters: Ref<string[]> = ref([]);
+const selectedRoleFilters: Ref<string[]> = ref([]);
 
 const { jobs, isLoading } = useJobs();
 

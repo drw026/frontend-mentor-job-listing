@@ -57,7 +57,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, defineComponent, computed, provide } from 'vue';
+import { ref, computed, provide } from 'vue';
 import Job from './Job.vue';
 import LoadingSpinner from '../LoadingSpinner.vue';
 import useJobs from '../../common/composables/useJobs';
@@ -78,7 +78,7 @@ const jobsSorted = computed(() => {
 
 const removeJob = async (id: string) => {
   const accessToken = readCookie('accessToken');
-  const response = await fetch(
+  await fetch(
     `${import.meta.env.VITE_FIREBASE_URL}/jobs/${id}.json?auth=${accessToken}`,
     { method: 'DELETE' },
   );
